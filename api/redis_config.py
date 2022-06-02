@@ -1,6 +1,7 @@
 from config.config import get_redis
 
 
+# Configurações de conexão do Redis
 class Config(object):
     CACHE_TYPE = get_redis()['CACHE_TYPE']
     CACHE_REDIS_PORT = get_redis()['CACHE_REDIS_PORT']

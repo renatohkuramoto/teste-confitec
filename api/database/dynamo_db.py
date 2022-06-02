@@ -1,6 +1,7 @@
 import boto3
 from config import get_database
 
+# Configurações do AWS
 client = boto3.client(
     'dynamodb',
     aws_access_key_id=get_database()['AWS_ACCESS_KEY_ID'],

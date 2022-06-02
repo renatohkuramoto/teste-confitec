@@ -1,5 +1,5 @@
 # API Teste CONFITEC
-O objeto do teste foi criar uma aplicação para consumir a API Genius e salvar o retorno no cache (Redis) e no DynamoDB.
+O objeto do teste foi criar uma aplicação para consumir a API Genius e salvar o retorno no cache e no DynamoDB.
 
 
 ## Instalação

@@ -10,6 +10,7 @@ app.config.from_object(Config)
 cache = Cache(app)
 
 
+# Decorator para verificar se irá limpar o cache
 def verify_cache(f):
     def decorated(*args, **kwargs):
         cache_param = request.args.get('cache')
@@ -20,6 +21,7 @@ def verify_cache(f):
     return decorated
 
 
+# Rota para consultar as musicas do artista
 @app.route("/artist/<name>", methods=['GET'])
 @verify_cache
 @cache.cached(timeout=86400*7)
@@ -27,6 +29,8 @@ def get_artist(name):
     cache_param = request.args.get('cache')
     search = SearchController()
 
+    # Verifica se veio o param cache, para consultar na API novamente
+    # e salvar no DynamoDB.
     if (cache_param is not None):
         if (cache_param.lower() == 'false'):
             data = search.get_artist_api(name)
@@ -34,6 +38,8 @@ def get_artist(name):
             data['uuid'] = uuid
             return data
 
+    # Se não veio o param cache, e não existe no cache
+    # Verifica se existe no DynamoDB e retorna as informações
     exists_data = search.get_data_artist(name)
     if ('Item' in exists_data):
         logging.warning(exists_data)
@@ -45,6 +51,7 @@ def get_artist(name):
             'uuid': exists_data['Item']['uuid']
         }
 
+    # Caso não exista no DynamoDB, consulta e salva as informações
     data = search.get_artist_api(name)
     uuid = search.save_data_artist(name, data['top_musics'])
     data['uuid'] = uuid

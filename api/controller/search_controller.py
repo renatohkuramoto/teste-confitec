@@ -6,9 +6,11 @@ from database import resource
 
 class SearchController:
     def __init__(self):
+        # Seta a URL e Token na classe
         self.__url_genius = get_url_services()['genius']
         self.__token_genius = get_url_services()['genius_auth']
 
+    # Busca o Id do Artista
     def get_id_artist(self, artist):
         URL = self.__url_genius + '/search?q=' + artist
         headers = {'Authorization': f'Bearer {self.__token_genius}'}
@@ -26,6 +28,7 @@ class SearchController:
             'status_code': req.status_code
         }
 
+    # Busca as musicas do artista
     def get_artist_api(self, artist):
         data = self.get_id_artist(artist)
         if (data['status']):
@@ -46,6 +49,7 @@ class SearchController:
                 'status_code': req.status_code
             }
 
+    # Salva a consulta no DynamoDB
     def save_data_artist(self, artist, data):
         uuid = str(uuid4())
         artists_db = resource.Table('Artists')
@@ -58,6 +62,7 @@ class SearchController:
         )
         return uuid
 
+    # Consulta os dados no DynamoDB
     def get_data_artist(self, artist):
         artists_db = resource.Table('Artists')
         response = artists_db.get_item(
@@ -67,6 +72,7 @@ class SearchController:
 
         return response
 
+    # Armanzena as musicas em uma lista
     def format_data(self, data):
         list_songs = []
         for register in data['response']['songs']:
