@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  api:
+    container_name: api-teste
+    environment:
+      DBENV: local
+      ENV: local
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    entrypoint: python api/app.py
+    ports:
+      - '5000:5000'
+  redis:
+    image: redis
+    container_name: redis-container
+    ports:
+      - "6379:6379"

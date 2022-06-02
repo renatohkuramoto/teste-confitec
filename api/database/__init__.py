@@ -1,0 +1,1 @@
+from database.dynamo_db import resource, client
